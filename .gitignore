@@ -1,0 +1,42 @@
+# Common
+*.class
+!.github/
+!.gitignore
+!.gitkeep
+!.travis.yml
+
+# Eclipse
+.classpath
+.project
+.settings/
+.recommenders/
+.factorypath
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+
+# NetBeans
+nb-configuration.xml
+
+# macOS
+**/.DS_Store
+.java-version
+
+# VisualStudioCode
+.vscode/
+
+# Maven
+log/
+target/
+dist/
+
+# Python
+venv/
+eggs/
+wheels/
+*.pyc
+
+# Gradle
+.gradle
