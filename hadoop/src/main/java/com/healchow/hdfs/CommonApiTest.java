@@ -231,4 +231,20 @@ public class CommonApiTest {
         fileSystem.close();
     }
 
+    /**
+     * 通过下载文件，测试访问权限控制
+     */
+    @Test
+    public void testAccessControl() throws Exception {
+        // 开启权限控制后，当前用户（启动 NameNode 的用户）应当能成功访问
+        // FileSystem fileSystem = FileSystem.get(new URI("hdfs://hadoop:9000"), new Configuration());
+        // 伪造其他用户访问，应当访问失败
+        FileSystem fileSystem = FileSystem.get(new URI("hdfs://hadoop:9000"), new Configuration(), "testuser");
+
+        fileSystem.copyToLocalFile(new Path("/test/config/core-site.xml"),
+                new Path("file:/Users/healchow/bigdata/core-site.xml"));
+
+        fileSystem.close();
+    }
+
 }
