@@ -26,7 +26,7 @@ import java.nio.charset.StandardCharsets;
  * 练习 HDFS 的常用 API
  *
  * @author healchow
- * @since 2021/06/09 0 05
+ * @since 2021/06/09 11:50
  */
 public class CommonApiTest {
 
