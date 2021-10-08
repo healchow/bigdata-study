@@ -29,6 +29,8 @@ import java.nio.charset.StandardCharsets;
  * @since 2021/06/09 11:50
  */
 public class CommonApiTest {
+    
+    private static final String HDFS_SERVER_URI = "hdfs://hadoop:9000";
 
     /**
      * 获取 FileSystem - FileSystem.get()
@@ -39,11 +41,11 @@ public class CommonApiTest {
         Configuration conf = new Configuration();
 
         // 指定文件系统类型
-        conf.set("fs.defaultFS", "hdfs://hadoop:9000");
+        conf.set("fs.defaultFS", HDFS_SERVER_URI);
 
         // 获取指定的文件系统
         FileSystem fileSystem = FileSystem.get(conf);
-        // FileSystem fileSystem = FileSystem.get(new URI("hdfs://hadoop:9000"), new Configuration());
+        // FileSystem fileSystem = FileSystem.get(new URI(HDFS_SERVER_URI), new Configuration());
 
         // 结果：DFS[DFSClient[clientName=DFSClient_NONMAPREDUCE_1219793882_1, ugi=healchow (auth:SIMPLE)]]
         System.out.println(fileSystem);
@@ -61,11 +63,11 @@ public class CommonApiTest {
         Configuration conf = new Configuration();
 
         // 指定文件系统类型
-        conf.set("fs.defaultFS", "hdfs://hadoop:9000");
+        conf.set("fs.defaultFS", HDFS_SERVER_URI);
 
         // 获取指定的文件系统
         FileSystem fileSystem = FileSystem.newInstance(conf);
-        // FileSystem fileSystem = FileSystem.newInstance(new URI("hdfs://hadoop:9000"), new Configuration());
+        // FileSystem fileSystem = FileSystem.newInstance(new URI(HDFS_SERVER_URI), new Configuration());
 
         System.out.println(fileSystem);
         fileSystem.close();
@@ -77,7 +79,7 @@ public class CommonApiTest {
     @Test
     public void testPutFile() throws IOException, URISyntaxException {
         // 创建测试目录（可创建多级目录）
-        FileSystem fileSystem = FileSystem.newInstance(new URI("hdfs://hadoop:9000"), new Configuration());
+        FileSystem fileSystem = FileSystem.newInstance(new URI(HDFS_SERVER_URI), new Configuration());
         boolean result = fileSystem.mkdirs(new Path("/test/input"));
         System.out.println("mkdir result: " + result);
 
@@ -96,7 +98,7 @@ public class CommonApiTest {
     @Test
     public void testUploadFile() throws URISyntaxException, IOException {
         // 获取 FileSystem
-        FileSystem fileSystem = FileSystem.get(new URI("hdfs://hadoop:9000"), new Configuration());
+        FileSystem fileSystem = FileSystem.get(new URI(HDFS_SERVER_URI), new Configuration());
 
         // 从本地上传文件，两个参数都要指定到具体的文件
         fileSystem.copyFromLocalFile(new Path("/Users/healchow/bigdata/core-site.xml"),
@@ -134,7 +136,7 @@ public class CommonApiTest {
     @Test
     public void testDownloadFile() throws URISyntaxException, IOException {
         // 获取 FileSystem
-        FileSystem fileSystem = FileSystem.get(new URI("hdfs://hadoop:9000"), new Configuration());
+        FileSystem fileSystem = FileSystem.get(new URI(HDFS_SERVER_URI), new Configuration());
 
         // 获取 HDFS 文件的输入流
         FSDataInputStream inputStream = fileSystem.open(new Path("/test/input/hello.txt"));
@@ -157,7 +159,7 @@ public class CommonApiTest {
     @Test
     public void testDownloadFileByCopyTo() throws URISyntaxException, IOException, InterruptedException {
         // 获取 FileSystem
-        FileSystem fileSystem = FileSystem.get(new URI("hdfs://hadoop:9000"), new Configuration(), "root");
+        FileSystem fileSystem = FileSystem.get(new URI(HDFS_SERVER_URI), new Configuration(), "root");
 
         // copyToLocalFile 拷贝文件到本地，会下载 CRC 校验文件
         fileSystem.copyToLocalFile(new Path("/test/input/hello.txt"),
@@ -173,7 +175,7 @@ public class CommonApiTest {
     @Test
     public void testListFiles() throws URISyntaxException, IOException {
         // 获取FileSystem实例
-        FileSystem fileSystem = FileSystem.get(new URI("hdfs://hadoop:9000"), new Configuration());
+        FileSystem fileSystem = FileSystem.get(new URI(HDFS_SERVER_URI), new Configuration());
 
         // 递归获取 /test 目录下所有的文件信息
         RemoteIterator<LocatedFileStatus> iterator = fileSystem.listFiles(new Path("/test"), true);
@@ -203,7 +205,7 @@ public class CommonApiTest {
     @Test
     public void testMergeFile() throws URISyntaxException, IOException, InterruptedException {
         // 获取 FileSystem
-        FileSystem fileSystem = FileSystem.get(new URI("hdfs://hadoop:9000"), new Configuration(), "root");
+        FileSystem fileSystem = FileSystem.get(new URI(HDFS_SERVER_URI), new Configuration(), "root");
 
         // 获取要合并的大文件的输出流（用来写文件）
         FSDataOutputStream outputStream = fileSystem.create(new Path("/test/merge_file.txt"));
@@ -237,9 +239,9 @@ public class CommonApiTest {
     @Test
     public void testAccessControl() throws Exception {
         // 开启权限控制后，当前用户（启动 NameNode 的用户）应当能成功访问
-        // FileSystem fileSystem = FileSystem.get(new URI("hdfs://hadoop:9000"), new Configuration());
+        // FileSystem fileSystem = FileSystem.get(new URI(HDFS_SERVER_URI), new Configuration());
         // 伪造其他用户访问，应当访问失败
-        FileSystem fileSystem = FileSystem.get(new URI("hdfs://hadoop:9000"), new Configuration(), "testuser");
+        FileSystem fileSystem = FileSystem.get(new URI(HDFS_SERVER_URI), new Configuration(), "testuser");
 
         fileSystem.copyToLocalFile(new Path("/test/config/core-site.xml"),
                 new Path("file:/Users/healchow/bigdata/core-site.xml"));

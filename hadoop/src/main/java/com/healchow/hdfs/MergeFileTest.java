@@ -20,10 +20,12 @@ import java.net.URI;
  */
 public class MergeFileTest {
 
+    private static final String HDFS_SERVER_URI = "hdfs://hadoop:9000";
+
     @Test
     public void testMergeFile() throws Exception {
         // 获取分布式文件系统
-        FileSystem fileSystem = FileSystem.get(new URI("hdfs://hadoop:9000"), new Configuration(), "healchow");
+        FileSystem fileSystem = FileSystem.get(new URI(HDFS_SERVER_URI), new Configuration(), "healchow");
         FSDataOutputStream outputStream = fileSystem.create(new Path("/test/upload/merged_by_java.txt"));
         // 获取本地文件系统
         LocalFileSystem local = FileSystem.getLocal(new Configuration());
